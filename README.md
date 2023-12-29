@@ -370,127 +370,119 @@ for ($i = 0; $i < 10; $i++) {
 
 ```
 
-CODEWARS
+24js
 ```JavaScript
-function findAverage(array) {
-  let total = 0;
-  let average = 0;
-  if (array.length === 0) {
-    return 0;
-  } else {
-    for (let i = 0; i < array.length; i++) {
-      total += array[i]
+const fs = require("fs");
+const path = require("path");
+
+function parseJSONFiles(folderPath) {
+  //  путь к Lab8
+  const labFolder = path.resolve(__dirname, folderPath);
+
+ 
+  const qqFilePath = path.join(labFolder, "qq.json");
+
+  
+  const qqqFilePath = path.join(labFolder, "qqq.json");
+
+  // Чтение содержимого файла qq.json
+  fs.readFile(qqFilePath, "utf8", (err, data) => {
+    if (err) {
+      console.error(`Ошибка чтения файла qq.json: ${err}`);
+    } else {
+      console.log("Содержимое файла qq.json:");
+      console.log(data);
+      console.log("--------------------------");
     }
-    average = total / array.length
-    return average;
-  }
-}
-function findEvenIndex(arr) {
-  var sum = 0,
-  leftSum = 0;
-  for (var i = 0; i < arr.length; i++) {
-    sum = sum + arr[i];
-  }
-  for (var i = 0; i < arr.length; i++) {
-    sum = sum - arr[i];
-    if (leftSum === sum) {
-      return i;
+  });
+
+  // Чтение содержимого файла qqq.json
+  fs.readFile(qqqFilePath, "utf8", (err, data) => {
+    if (err) {
+      console.error(`Ошибка чтения файла qqq.json: ${err}`);
+    } else {
+      console.log("Содержимое файла qqq.json:");
+      console.log(data);
+      console.log("--------------------------");
     }
-    leftSum = leftSum + arr[i];
-  }
-  return -1;
+  });
 }
-function alphabetPosition(text) {
-  let sentence = text.toLowerCase().split("");
-  for (let i = sentence.length - 1; i >= 0; i--) {
-    if(sentence[i].match(/[a-z]/) === null) {
-      sentence.splice(i, 1);
-    }
-  }
-  let alphaArr = [];
-  for (let i = 0; i < 26; i++) {
-    alphaArr.push(String.fromCharCode(97 + i));
-  }
-  return sentence.map(item => alphaArr.indexOf(item) + 1).join(" ");
-}
-function breakChocolate(n,m) {
- if(n > 0 && m > 0) {
-      return n * m - 1;
-  } else {
-    return 0;
-  }
-}
+
+parseJSONFiles("./");
 ```
-КОДЕ
+25
 ```JavaScript
-const express = require('express');
-const QRCode = require('qrcode');
-const app = express();
+const fs = require('fs');
+const path = require('path');
 
-app.get('/generate', async (req, res) => {
-  const url = req.query.url;
+const directoryPath = './';
 
-  if (!url) {
-    return res.status(400).send('URL не указан.');
+fs.readdir(directoryPath, (err, files) => {
+  if (err) {
+    console.error('Возникла ошибка при чтении директории:', err);
+    return;
   }
-//QRCode.toDataURL() для генерации QR-кода на основе переданного URL. 
-try {
-  const qr = await QRCode.toDataURL(url, {
-  width: 600, 
-  height: 600, 
-  color: {
-  dark: '#081272', // Цвет  модулей QR-кода
-  light: '#ffffff' // Цвет светлых модулей QR-кода
-  },
-  margin: 10 
+  
+  files.forEach(file => {
+    console.log(file);
   });
-  res.send(`<img src="${qr}" />`);
-  } catch (err) {
-  res.status(500).send('Ошибка при создании QR-кода.');
-  }
-  });
-app.get('/', async (req, res) => {
-    res.send("добавить  /generate?url=https://vk.com/dmitriy_andreev65")
-  });
-
-app.listen(3000, () => {
-  console.log(`Сервер запущен на порту 3000`);
 });
 ```
-ПОЧТА
+26
 ```JavaScript
+const readline = require('readline');
 const nodemailer = require('nodemailer');
 
-
-const smtpConfig = {
-  host: 'smtp.mail.ru',
-  port: 587,
-  secure: false, // true для SSL, false для других
-  auth: {
-    user: 'dimasandreev071@mail.ru',
-    pass: 'jH6PgYsNgQ6iYz0E3DxV',
-  },
-};
-
-//  для отправки почты
-const transporter = nodemailer.createTransport(smtpConfig);
-
-// Параметры 
-const mailOptions = {
-  from: 'dimasandreev071@mail.ru',
-  to: 'dimasandreev019@gmail.com',
-  subject: 'Enotik',
-  text: 'Poloskyn',
- 
-};
-
-// Отправляем 
-transporter.sendMail(mailOptions, (error, info) => {
-  if (error) {
-    return console.log('Ошибка отправки письма:', error);
-  }
-  console.log('Письмо успешно отправлено:', info.messageId);
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
 });
+
+
+async function sendEmail() {
+  
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.mail.ru',
+    port: 587,
+    secure: false,
+    auth: {
+      user: 'dimasandreev071@mail.ru',
+      pass: 'jH6PgYsNgQ6iYz0E3DxV'
+    }
+  });
+
+  
+  let mailOptions = {
+    from: 'dimasandreev071@mail.ru',
+    to: 'dimasandreev019@gmail.com',
+    subject: 'Enotik',
+    text: 'Poloskyn',
+  };
+
+  try {
+    // Отправляем письмо
+    let info = await transporter.sendMail(mailOptions);
+    console.log('Отправлен:', info.messageId);
+  } catch (error) {
+    console.error('Ошибка email:', error);
+  }
+}
+
+rl.question('Отправить? (Y/N): ', async (answer) => {
+  
+  answer = answer.toUpperCase();
+
+ 
+  if (answer === 'Y' || answer === 'YES') {
+    await sendEmail();
+  } else {
+    console.log('НЕ отправлен');
+  }
+
+  rl.close();
+});
+
+
 ```
   <h2 style="text-align: center">ВЫВОД</h2>
  PHP — одним из самых популярных серверных языков программирования для веб-разработки. Он используется в следующих сферах:
